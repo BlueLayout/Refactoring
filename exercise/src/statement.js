@@ -51,6 +51,10 @@ function getTotalAmountResult(totalAmount) {
     return `Amount owed is ${format(totalAmount / 100)}\n`;
 }
 
+function getCreditsResult(volumeCredits) {
+    return `You earned ${volumeCredits} credits \n`;
+}
+
 function statement(invoice, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
@@ -68,7 +72,7 @@ function statement(invoice, plays) {
         totalAmount += thisAmount;
     }
     result += getTotalAmountResult(totalAmount);
-    result += `You earned ${volumeCredits} credits \n`;
+    result += getCreditsResult(volumeCredits);
     return result;
 }
 

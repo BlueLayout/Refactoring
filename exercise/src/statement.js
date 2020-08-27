@@ -50,6 +50,13 @@ function statement(invoice, plays) {
     return printText(invoice.customer, performance, totalAmount, volumeCredits);
 }
 
+function statementHTML(invoice, plays) {
+    let totalAmount = calculateTotalAmount(invoice.performances, plays);
+    let volumeCredits = calculateVolumeCredits(invoice.performances, plays);
+    let performance = generatePerformance(invoice.performances, plays);
+    return printHTML(invoice.customer, performance, totalAmount, volumeCredits);
+}
+
 function calculateTotalAmount(invoicePerformances, plays) {
     let totalAmount = 0;
     for (let perf of invoicePerformances) {
@@ -94,10 +101,19 @@ function printText(invoiceCustomer, invoicePerformances, totalAmount, volumeCred
         `You earned ${volumeCredits} credits \n`;
 }
 
-function printHTML() {
-
+function printHTML(invoiceCustomer, invoicePerformances, totalAmount, volumeCredits) {
+    return `<h1>Statement for ${invoiceCustomer}</h1>\n` +
+        '<table>\n' +
+        '<tr><th>play</th><th>seats</th><th>cost</th></tr>' +
+        invoicePerformances.map(performance => {
+            return ` <tr><td>${performance.name}</td><td>${performance.audience}</td><td>${format(performance.amount / 100)}</td></tr>\n`
+        }).join('') +
+        '</table>\n' +
+        `<p>Amount owed is <em>${format(totalAmount / 100)}</em></p>\n` +
+        `<p>You earned <em>${volumeCredits}</em> credits</p>\n`;
 }
 
 module.exports = {
     statement,
+    statementHTML
 };

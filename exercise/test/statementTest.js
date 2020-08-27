@@ -1,5 +1,5 @@
 const test = require('ava');
-const {statement} = require('../src/statement');
+const {statement,statementHTML} = require('../src/statement');
 
 test('statement case 1 test. play type is tragedy, play audience is 40', t => {
   //given
@@ -208,7 +208,7 @@ test('statement case 6 test. Print xml result when hamlet 55, as-like 35 and oth
         }
     };
     //when
-    const result = statement(invoice, plays);
+    const result = statementHTML(invoice, plays);
     //then
     t.is(result, '<h1>Statement for BigCo</h1>\n' +
         '<table>\n' +

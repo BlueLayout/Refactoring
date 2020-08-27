@@ -43,22 +43,6 @@ function getAmount(type, audienceNum) {
     }
 }
 
-function getTotalAmountResult(totalAmount) {
-    return `Amount owed is ${format(totalAmount / 100)}\n`;
-}
-
-function getCreditsResult(volumeCredits) {
-    return `You earned ${volumeCredits} credits \n`;
-}
-
-function getOnePlayResult(playName, thisAmount, perfAudience) {
-    return ` ${playName}: ${format(thisAmount / 100)} (${perfAudience} seats)\n`;
-}
-
-function getCustomerResult(invoice) {
-    return `Statement for ${invoice}\n`;
-}
-
 function statement(invoice, plays) {
     let totalAmount = calculateTotalAmount(invoice.performances, plays);
     let volumeCredits = calculateVolumeCredits(invoice.performances, plays);

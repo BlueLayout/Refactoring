@@ -37,6 +37,16 @@ function getComedyAmount(type, audienceNum) {
   return amount;
 }
 
+function getAmount(type, audienceNum) {
+    if (type === 'tragedy') {
+        return getTragedyAmount(type, audienceNum);
+    } else if (type === 'comedy') {
+        return getComedyAmount(type, audienceNum);
+    } else {
+        throw new Error(`unknown type: ${type}`);
+    }
+}
+
 function statement(invoice, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
@@ -44,16 +54,7 @@ function statement(invoice, plays) {
     for (let perf of invoice.performances) {
         const play = plays[perf.playID];
         let thisAmount = 0;
-        switch (play.type) {
-            case 'tragedy':
-                thisAmount += getTragedyAmount(play.type, perf.audience);
-                break;
-            case 'comedy':
-                thisAmount += getComedyAmount(play.type, perf.audience);
-                break;
-            default:
-                throw new Error(`unknown type: ${play.type}`);
-        }
+        thisAmount += getAmount(play.type, perf.audience);
         // add volume credits
         volumeCredits += getVolumeCredits(perf);
         // add extra credit for every ten comedy attendees

@@ -136,3 +136,40 @@ test('statement case 4 test. play type is comedy, play audience is 19', t => {
         'Amount owed is $357.00\n' +
         'You earned 3 credits \n');
 });
+
+test('statement case 5 test. play type is unknown type, play audience is 19', t => {
+    //given
+    const invoice = {
+        'customer': 'BigCo',
+        'performances': [
+            {
+                'playID': 'othellos',
+                'audience': 19,
+            }
+        ],
+    };
+    const plays = {
+        'hamlet': {
+            'name': 'Hamlet',
+            'type': 'tragedy',
+        },
+        'as-like': {
+            'name': 'As You Like It',
+            'type': 'comedy',
+        },
+        'othello': {
+            'name': 'Othello',
+            'type': 'tragedy',
+        },
+        'othellos': {
+            'name': 'Othellos',
+            'type': 'tragedys',
+        },
+    };
+    //when
+    const result = t.throws(()=>{
+        statement(invoice, plays);
+    })
+    //then
+    t.is(result.message,"unknown type: tragedys")
+});

@@ -8,16 +8,12 @@ function format(number) {
     return formatAmount(number);
 }
 
-function getOnePlayResult(play, thisAmount, perf) {
-    return ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+function getVolumeCredits(perfAudience) {
+    return Math.max(perfAudience - 30, 0);
 }
 
-function getVolumeCredits(perf) {
-    return Math.max(perf.audience - 30, 0);
-}
-
-function getComedyVolumeCredits(perf) {
-    return Math.floor(perf.audience / 5);
+function getComedyVolumeCredits(perfAudience) {
+    return Math.floor(perfAudience / 5);
 }
 
 function getTragedyAmount(type, audienceNum) {
@@ -55,28 +51,59 @@ function getCreditsResult(volumeCredits) {
     return `You earned ${volumeCredits} credits \n`;
 }
 
+function getOnePlayResult(playName, thisAmount, perfAudience) {
+    return ` ${playName}: ${format(thisAmount / 100)} (${perfAudience} seats)\n`;
+}
+
 function getCustomerResult(invoice) {
     return `Statement for ${invoice}\n`;
 }
 
 function statement(invoice, plays) {
-    let totalAmount = 0;
+    let totalAmount = calculateTotalAmount(invoice.performances, plays);
     let volumeCredits = 0;
     let result = getCustomerResult(invoice.customer);
     for (let perf of invoice.performances) {
         const play = plays[perf.playID];
-        let thisAmount = 0;
-        thisAmount += getAmount(play.type, perf.audience);
-        volumeCredits += getVolumeCredits(perf);
-        if ('comedy' === play.type) volumeCredits += getComedyVolumeCredits(perf);
-        result += getOnePlayResult(play, thisAmount, perf);
-        totalAmount += thisAmount;
+        volumeCredits += getVolumeCredits(perf.audience);
+        if ('comedy' === play.type) volumeCredits += getComedyVolumeCredits(perf.audience);
     }
+    result +=generatePerformance(invoice.performances, plays);
     result += getTotalAmountResult(totalAmount);
     result += getCreditsResult(volumeCredits);
     return result;
 }
 
+function calculateTotalAmount(invoicePerformances, plays) {
+    let totalAmount = 0;
+    for (let perf of invoicePerformances) {
+        const play = plays[perf.playID];
+        let thisAmount = getAmount(play.type, perf.audience);
+        totalAmount += thisAmount;
+    }
+    return totalAmount;
+}
+
+function generatePerformance(performances, plays) {
+    let result = '';
+    for (let perf of performances) {
+        const play = plays[perf.playID];
+        let thisAmount = getAmount(play.type, perf.audience);
+        result += getOnePlayResult(play.name, thisAmount, perf.audience);
+    }
+    return result;
+}
+
+function printText(invoiceCustomer, invoicePerformances, totalAmount, volumeCredits) {
+    return `Statement for ${invoiceCustomer}\n`+
+        invoicePerformances.map(performance => performance.toString() + '\n').join('')+
+        `Amount owed is ${format(totalAmount / 100)}\n`+
+        `You earned ${volumeCredits} credits \n`;
+}
+
+function printHTML(){
+
+}
 module.exports = {
     statement,
 };

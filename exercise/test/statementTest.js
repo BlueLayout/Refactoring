@@ -169,7 +169,7 @@ test('statement case 5 test. play type is unknown type, play audience is 19', t 
     //when
     const result = t.throws(()=>{
         statement(invoice, plays);
-    })
+    });
     //then
     t.is(result.message,"unknown type: tragedys")
 });

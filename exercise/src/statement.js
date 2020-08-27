@@ -47,6 +47,10 @@ function getAmount(type, audienceNum) {
     }
 }
 
+function getTotalAmountResult(totalAmount) {
+    return `Amount owed is ${format(totalAmount / 100)}\n`;
+}
+
 function statement(invoice, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
@@ -63,7 +67,7 @@ function statement(invoice, plays) {
         result += getOnePlayResult(play, thisAmount, perf);
         totalAmount += thisAmount;
     }
-    result += `Amount owed is ${format(totalAmount / 100)}\n`;
+    result += getTotalAmountResult(totalAmount);
     result += `You earned ${volumeCredits} credits \n`;
     return result;
 }

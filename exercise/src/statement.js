@@ -55,10 +55,14 @@ function getCreditsResult(volumeCredits) {
     return `You earned ${volumeCredits} credits \n`;
 }
 
+function getCustomerResult(invoice) {
+    return `Statement for ${invoice}\n`;
+}
+
 function statement(invoice, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
-    let result = `Statement for ${invoice.customer}\n`;
+    let result = getCustomerResult(invoice.customer);
     for (let perf of invoice.performances) {
         const play = plays[perf.playID];
         let thisAmount = 0;

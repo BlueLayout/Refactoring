@@ -3,12 +3,17 @@ const formatAmount = new Intl.NumberFormat('en-US', {
   currency: 'USD',
   minimumFractionDigits: 2,
 }).format;
+
 function format(number) {
   return formatAmount(number);
 }
 
 function getOnePlayResult(play, thisAmount, perf) {
   return ` ${play.name}: ${format(thisAmount / 100)} (${perf.audience} seats)\n`;
+}
+
+function getVolumeCredits(perf) {
+  return Math.max(perf.audience - 30, 0);
 }
 
 function statement (invoice, plays) {
@@ -36,7 +41,7 @@ function statement (invoice, plays) {
         throw new Error(`unknown type: ${play.type}`);
     }
     // add volume credits
-    volumeCredits += Math.max(perf.audience - 30, 0);
+    volumeCredits += getVolumeCredits(perf);
     // add extra credit for every ten comedy attendees
     if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
     //print line for this order

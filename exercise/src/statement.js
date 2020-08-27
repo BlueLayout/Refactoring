@@ -63,11 +63,8 @@ function statement(invoice, plays) {
         const play = plays[perf.playID];
         let thisAmount = 0;
         thisAmount += getAmount(play.type, perf.audience);
-        // add volume credits
         volumeCredits += getVolumeCredits(perf);
-        // add extra credit for every ten comedy attendees
         if ('comedy' === play.type) volumeCredits += getComedyVolumeCredits(perf);
-        //print line for this order
         result += getOnePlayResult(play, thisAmount, perf);
         totalAmount += thisAmount;
     }

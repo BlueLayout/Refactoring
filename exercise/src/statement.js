@@ -62,16 +62,13 @@ function getCustomerResult(invoice) {
 function statement(invoice, plays) {
     let totalAmount = calculateTotalAmount(invoice.performances, plays);
     let volumeCredits = 0;
-    let result = getCustomerResult(invoice.customer);
     for (let perf of invoice.performances) {
         const play = plays[perf.playID];
         volumeCredits += getVolumeCredits(perf.audience);
         if ('comedy' === play.type) volumeCredits += getComedyVolumeCredits(perf.audience);
     }
-    result +=generatePerformance(invoice.performances, plays);
-    result += getTotalAmountResult(totalAmount);
-    result += getCreditsResult(volumeCredits);
-    return result;
+    let performance = generatePerformance(invoice.performances, plays);
+    return printText(invoice.customer, performance, totalAmount, volumeCredits);
 }
 
 function calculateTotalAmount(invoicePerformances, plays) {
@@ -84,19 +81,28 @@ function calculateTotalAmount(invoicePerformances, plays) {
     return totalAmount;
 }
 
+
+
 function generatePerformance(performances, plays) {
-    let result = '';
+    let result = [];
     for (let perf of performances) {
         const play = plays[perf.playID];
         let thisAmount = getAmount(play.type, perf.audience);
-        result += getOnePlayResult(play.name, thisAmount, perf.audience);
+        let res = {
+            name: play.name,
+            amount: thisAmount,
+            audience: perf.audience
+        };
+        result.push(res);
     }
     return result;
 }
 
 function printText(invoiceCustomer, invoicePerformances, totalAmount, volumeCredits) {
     return `Statement for ${invoiceCustomer}\n`+
-        invoicePerformances.map(performance => performance.toString() + '\n').join('')+
+        invoicePerformances.map(performance => {
+            return ` ${performance.name}: ${format(performance.amount/100)} (${performance.audience} seats)\n`
+        }).join('')+
         `Amount owed is ${format(totalAmount / 100)}\n`+
         `You earned ${volumeCredits} credits \n`;
 }
